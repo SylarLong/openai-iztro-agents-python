@@ -1,8 +1,8 @@
-# openai-iztro-agent-python
+# openai-iztro-agents
 
 Build your own **Ziwei (Purple Star Astrology / 紫微斗数) agent** in Python.
 
-> `pip install openai-iztro-agent-python` → `import iztro_agents`
+> `pip install openai-iztro-agents` → `import iztro_agents`
 
 A thin layer on top of the [OpenAI Agents SDK](https://pypi.org/project/openai-agents/):
 
@@ -15,7 +15,7 @@ You write ordinary OpenAI Agents SDK code — `Agent`, `Runner`, `@function_tool
 ## Install
 
 ```bash
-pip install openai-iztro-agent-python
+pip install openai-iztro-agents
 ```
 
 Get an API key (`sk_ziwei_*`) from the developer console.
