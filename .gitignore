@@ -1,0 +1,18 @@
+# Local keyed test scripts — never commit (contain an API key)
+run_live_test.py
+run_live_stream.py
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
