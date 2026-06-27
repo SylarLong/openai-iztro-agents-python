@@ -1,9 +1,9 @@
-"""Multi-turn memory + resume + listing a user's conversations (ChatSession).
+"""Example 04 — Multi-turn memory: remember a conversation and resume it (ChatSession).
 
 History lives on the server, keyed by a server-generated conversation id and owned by
 your ``external_user_id``.
 
-Run:  python examples/multi_turn.py
+Run:  python examples/04_multi_turn.py
 """
 
 import asyncio

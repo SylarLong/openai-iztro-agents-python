@@ -1,9 +1,9 @@
-"""Human-in-the-loop with the native SDK approval flow.
+"""Example 08 — Human-in-the-loop: approve a sensitive action before it runs.
 
 A tool marked ``needs_approval=True`` pauses the run; ``Runner.run`` returns a result
 with ``interruptions``. You approve/reject, then resume by running the saved state.
 
-Run:  python examples/human_in_the_loop.py
+Run:  python examples/08_human_in_the_loop.py
 """
 
 import asyncio

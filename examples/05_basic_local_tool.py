@@ -1,6 +1,6 @@
-"""Basic example: a local function tool the hosted Ziwei agent can call.
+"""Example 05 — Your first tool: a local function the hosted Ziwei agent can call.
 
-Run:  python examples/basic_local_tool.py
+Run:  python examples/05_basic_local_tool.py
 """
 
 import asyncio
