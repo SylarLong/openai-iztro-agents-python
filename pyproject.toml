@@ -27,9 +27,9 @@ dependencies = [
 dev = ["pytest>=8", "pytest-asyncio>=0.23"]
 
 [project.urls]
-Homepage = "https://github.com/a5507203/openai-iztro-agents-python"
-Repository = "https://github.com/a5507203/openai-iztro-agents-python"
-Documentation = "https://github.com/a5507203/openai-iztro-agents-python#readme"
+Homepage = "https://github.com/SylarLong/openai-iztro-agents-python"
+Repository = "https://github.com/SylarLong/openai-iztro-agents-python"
+Documentation = "https://github.com/SylarLong/openai-iztro-agents-python#readme"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/iztro_agents"]

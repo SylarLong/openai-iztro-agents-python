@@ -4,7 +4,7 @@ Build your own **Ziwei (Purple Star Astrology / 紫微斗数) agent** in Python.
 
 > `pip install openai-iztro-agents` → `import iztro_agents`
 >
-> 🟨 **Working in JavaScript / TypeScript?** See the sibling package [**openai-iztro-agents-js**](https://github.com/a5507203/openai-iztro-agents-js) — same design, JS conventions.
+> 🟨 **Working in JavaScript / TypeScript?** See the sibling package [**openai-iztro-agents-js**](https://github.com/SylarLong/openai-iztro-agents-js) — same design, JS conventions.
 
 A thin layer on top of the [OpenAI Agents SDK](https://pypi.org/project/openai-agents/):
 
