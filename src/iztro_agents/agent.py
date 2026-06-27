@@ -17,7 +17,7 @@ def iztro_ziwei_agent(
     mcp_servers: list[Any] | None = None,
     api_key: str | None = None,
     base_url: str | None = None,
-    model_name: str = "iztro-ziwei-v1",
+    model_name: str = "iztro-ziwei-v3",
     **agent_kwargs: Any,
 ) -> Agent:
     """Return a stock ``agents.Agent`` whose model is the hosted Ziwei agent.

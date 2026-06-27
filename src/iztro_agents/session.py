@@ -11,7 +11,7 @@ conversation id** (lazily, on first use), and ``external_user_id`` records which
     from iztro_agents import ChatSession
 
     model = OpenAIChatCompletionsModel(
-        model="iztro-ziwei-v1",
+        model="iztro-ziwei-v3",
         openai_client=AsyncOpenAI(base_url="https://chat-api.iztro.com/v2", api_key=KEY),
     )
     agent = Agent(name="Ziwei", model=model, tools=[...])

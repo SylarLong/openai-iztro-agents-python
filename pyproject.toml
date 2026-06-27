@@ -36,6 +36,7 @@ packages = ["src/iztro_agents"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+pythonpath = ["src"]
 markers = [
     "live: end-to-end test against a deployed backend (needs ZIWEI_API_KEY; hits the network)",
 ]

@@ -8,7 +8,7 @@ from agents import OpenAIChatCompletionsModel
 from openai import AsyncOpenAI
 
 DEFAULT_BASE_URL = "https://chat-api.iztro.com"
-IZTRO_ZIWEI_MODEL = "iztro-ziwei-v1"
+IZTRO_ZIWEI_MODEL = "iztro-ziwei-v3"
 
 
 def iztro_ziwei_model(

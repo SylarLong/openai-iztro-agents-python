@@ -104,13 +104,27 @@ agent = iztro_ziwei_agent(mcp_servers=[weather], api_key=KEY)
 ## Testing
 
 ```bash
-# Fast, deterministic, offline (no key) — mocks the model HTTP:
-pytest tests/test_loop.py
+# Fast, deterministic, offline (no key) — mocks the model + conversation HTTP:
+pytest            # runs the whole offline suite (the live test self-skips)
 
 # Live end-to-end against a deployed backend (opt-in):
 ZIWEI_API_KEY=sk_ziwei_... pytest tests/test_live.py -v -s
 # defaults to dev; prod via ZIWEI_BASE_URL=https://chat-api.iztro.com
 ```
+
+The offline suite covers a wide range of scenarios — each test file is written so a
+scenario can graduate into an `examples/` script:
+
+| File | What it exercises |
+|---|---|
+| `tests/test_tool_loops.py` | plain chat, single/parallel/sequential tool calls, typed args, local-tool errors, unicode, `tool_choice`/`parallel_tool_calls`, and that iztro tools stay hidden |
+| `tests/test_human_in_the_loop.py` | native `needs_approval` flow — approve, reject, and a mixed approve+reject turn |
+| `tests/test_streaming.py` | `Runner.run_streamed` token deltas reassembling into `final_output` |
+| `tests/test_session.py` | `ChatSession` memory — lazy id, add/get/pop/clear, multi-turn, ownership + listing, resume |
+| `tests/test_factories.py` | credential/base-url resolution, `/v2` suffix, and SDK arg passthrough |
+
+Shared offline backends live in `tests/_mock.py` (a fake chat-completions endpoint and an
+in-memory conversation store).
 
 ## Notes
 
