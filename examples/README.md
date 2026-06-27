@@ -50,7 +50,7 @@ That's it. The reading prints to your screen.
 | `01_hello_ziwei.py` | Your first program: one rich, professional, chart-grounded reading. | the basics |
 | `02_prompt_gallery.py` | **The showcase** — the same chart read for personality, fortune (流年运势), career, love, and wealth. Copy any prompt. | depth & variety |
 | `03_streaming_chat.py` | Show the reply as it's typed, live. | `Runner.run_streamed` |
-| `04_multi_turn.py` | Remember a conversation and **resume it later**. | `ChatSession` |
+| `04_memory_and_resume.py` | Remember a conversation and **resume it later** (save the id, reload it next request). | `ChatSession` |
 | `05_basic_local_tool.py` | Let the agent call **one** of your Python functions. | `@function_tool` |
 | `06_two_tools_at_once.py` | The agent calls **two** of your functions in one turn. | parallel tools |
 | `07_multi_step_booking.py` | A two-step task: check your calendar, then book a free day. | tools used in sequence |
@@ -74,7 +74,9 @@ That's it. The reading prints to your screen.
 - **ModelSettings** — knobs for the model. `max_tokens` is a hard ceiling on reply length
   for **cost control in production** (see `09_limit_length_and_cost.py`) — a budget limit,
   not a quality setting.
-- **ChatSession** — optional memory, so the agent remembers earlier messages.
+- **ChatSession** — optional memory, so the agent remembers earlier messages. History lives
+  on the server under a conversation id; **save `session.session_id`** to resume the chat
+  later (see `04_memory_and_resume.py`). `list_user_conversations(user_id)` lists a user's chats.
 
 ## If something goes wrong
 
