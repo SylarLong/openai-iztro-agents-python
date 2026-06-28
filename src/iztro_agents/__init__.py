@@ -22,12 +22,22 @@ lives on the server via ``ChatSession`` (the OpenAI Conversations-style session)
 from agents import Agent, Runner, function_tool
 
 from .agent import iztro_ziwei_agent
-from .model import DEFAULT_BASE_URL, IZTRO_ZIWEI_MODEL, iztro_ziwei_model
+from .model import (
+    DEFAULT_BASE_URL,
+    IZTRO_ZIWEI_MODEL,
+    IztroModelResponse,
+    IztroToolsStreamEvent,
+    IztroZiweiModel,
+    iztro_ziwei_model,
+)
 from .session import ChatSession, list_user_conversations
 
 __all__ = [
     "iztro_ziwei_agent",
     "iztro_ziwei_model",
+    "IztroZiweiModel",
+    "IztroModelResponse",
+    "IztroToolsStreamEvent",
     "ChatSession",
     "list_user_conversations",
     # convenience re-exports from the OpenAI Agents SDK:

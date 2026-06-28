@@ -38,6 +38,10 @@ async def main() -> None:
         "auspicious day next week based on my chart and add it to my calendar.",
         session=session,
     )
+    # A local tool makes the run span several model calls; each call's response carries its
+    # own iztro tools, so gather them across result.raw_responses (deduped, in order).
+    used = [t for r in result.raw_responses for t in r.iztro_tools]
+    print("🔮 iztro computed:", ", ".join(dict.fromkeys(used)))
     print(result.final_output)
     await session.close()
 

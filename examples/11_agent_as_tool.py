@@ -48,11 +48,14 @@ def add_to_calendar(date: str, title: str) -> str:
 
 
 async def main() -> None:
-    # The Ziwei agent, wrapped as a tool the orchestrator can call.
-    ziwei_reading = iztro_ziwei_agent(
+    # The Ziwei agent, wrapped as a tool the orchestrator can call. Keep a reference to the
+    # agent: its responses run INSIDE the sub-agent, so they aren't in the orchestrator's
+    # result.raw_responses — read the iztro tools from the agent's model afterwards instead.
+    ziwei_agent = iztro_ziwei_agent(
         instructions="你是一位资深紫微斗数命理师，请基于真实命盘给出专业、具体的解读。",
         api_key=ZIWEI_API_KEY,
-    ).as_tool(
+    )
+    ziwei_reading = ziwei_agent.as_tool(
         tool_name="ziwei_reading",
         tool_description="Get a professional Ziwei reading. Pass birth date, time, gender, and the question.",
     )
@@ -77,6 +80,8 @@ async def main() -> None:
         "Today is 2026-06-26. I was born 1990-06-15 at 10:00, male. "
         "Ask the astrologer for one auspicious day next week, then put it on my calendar.",
     )
+    # The sub-agent's tools aren't in the orchestrator's result; read them off its model.
+    print("\n🔮 iztro computed:", ", ".join(ziwei_agent.model.last_iztro_tools))
     print("\n=== Final reply ===")
     print(result.final_output)
     print("\nYour calendar now holds:", my_calendar)

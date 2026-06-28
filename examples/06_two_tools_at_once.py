@@ -68,6 +68,12 @@ async def main() -> None:
         "tell me my lucky color and lucky number in one sentence.",
     )
 
+    # Local tools make this a MULTI-STEP run: result.raw_responses has one entry per model
+    # call, and each keeps its own server-side iztro tools — nothing is overwritten.
+    print("\n=== iztro tools per model call ===")
+    for i, r in enumerate(result.raw_responses):
+        print(f"  call {i}: {', '.join(r.iztro_tools) or '(none)'}")
+
     print("\n=== Final reply ===")
     print(result.final_output)
 

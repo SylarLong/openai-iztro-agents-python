@@ -46,6 +46,8 @@ async def main() -> None:
                 state.reject(item)
         result = await Runner.run(agent, state)
 
+    used = [t for r in result.raw_responses for t in r.iztro_tools]
+    print("\n🔮 iztro computed:", ", ".join(dict.fromkeys(used)))
     print("\n=== Final reply ===")
     print(result.final_output)
 

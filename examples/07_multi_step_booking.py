@@ -76,6 +76,9 @@ async def main() -> None:
         "Find a good day next week for an important meeting and put it on my calendar.",
     )
 
+    # Multi-step run: gather the server-side iztro tools from every model call.
+    used = [t for r in result.raw_responses for t in r.iztro_tools]
+    print("\n🔮 iztro computed:", ", ".join(dict.fromkeys(used)))
     print("\n=== Final reply ===")
     print(result.final_output)
     print("\nYour calendar now holds:", my_calendar)

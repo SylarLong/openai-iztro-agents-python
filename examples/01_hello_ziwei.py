@@ -57,6 +57,9 @@ async def main() -> None:
         "我出生于 1990 年 6 月 15 日上午 10:00，男性。请给我一份完整的个人性格与人生格局解读。",
     )
 
+    # Which chart tools the server ran to ground this reading. In a non-streaming run they
+    # ride on each model call's response, so read them off result.raw_responses.
+    print("🔮 iztro computed:", ", ".join(result.raw_responses[-1].iztro_tools))
     print(result.final_output)
 
 

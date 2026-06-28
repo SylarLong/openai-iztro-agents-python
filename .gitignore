@@ -1,6 +1,8 @@
 # Local keyed test scripts — never commit (contain an API key)
 run_live_test.py
 run_live_stream.py
+tests/run_examples_live.py
+tests/prod_diagnostic.py
 
 # Python
 __pycache__/

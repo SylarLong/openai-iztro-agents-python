@@ -41,6 +41,7 @@ async def full_depth() -> None:
     agent = iztro_ziwei_agent(instructions=INSTRUCTIONS, api_key=API_KEY)
     result = await Runner.run(agent, PROMPT)
     print("─" * 60, "\n① FULL DEPTH (no token cap — this is the default)\n")
+    print("🔮 iztro computed:", ", ".join(result.raw_responses[-1].iztro_tools))
     print(result.final_output)
 
 
@@ -53,6 +54,7 @@ async def capped(max_tokens: int) -> None:
     )
     result = await Runner.run(agent, PROMPT)
     print("\n" + "─" * 60, f"\n② CAPPED (max_tokens={max_tokens} — a cost/size ceiling)\n")
+    print("🔮 iztro computed:", ", ".join(result.raw_responses[-1].iztro_tools))
     print(result.final_output)
 
 

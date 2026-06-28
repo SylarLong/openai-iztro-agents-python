@@ -52,6 +52,7 @@ async def main() -> None:
         print(f"  Reading {i}/{len(PROMPTS)}")
         print("═" * 64 + "\n")
         result = await Runner.run(agent, prompt)
+        print("🔮 iztro computed:", ", ".join(result.raw_responses[-1].iztro_tools))
         print(result.final_output)
 
 

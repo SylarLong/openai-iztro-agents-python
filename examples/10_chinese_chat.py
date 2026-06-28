@@ -54,6 +54,9 @@ async def main() -> None:
         "请用三句话分析我的性格，并把要点用 save_note 工具记下来。",
     )
 
+    # 多轮调用，汇总每次模型调用在服务端跑过的 iztro 工具
+    used = [t for r in result.raw_responses for t in r.iztro_tools]
+    print("\n🔮 已调用 iztro：", "、".join(dict.fromkeys(used)))
     print("\n=== 最终回复 ===")
     print(result.final_output)
     print("\n笔记本里现在有：", notebook)

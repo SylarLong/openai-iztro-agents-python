@@ -19,7 +19,8 @@ from agents import Runner
 # This event type represents one small chunk ("delta") of streamed text.
 from openai.types.responses import ResponseTextDeltaEvent
 
-from iztro_agents import iztro_ziwei_agent
+# Emitted as the server runs a hidden iztro chart tool — arrives in the same event stream.
+from iztro_agents import iztro_ziwei_agent, IztroToolsStreamEvent
 
 API_KEY = os.environ.get("ZIWEI_API_KEY") or "sk_ziwei_REPLACE_WITH_YOUR_KEY"
 
@@ -38,10 +39,16 @@ async def main() -> None:
 
     print(">> The reading is being written:\n")
     async for event in streamed.stream_events():
-        # We only care about text chunks here; ignore other event types.
-        if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
-            # end="" and flush=True keep it on one growing line, like live typing.
-            print(event.data.delta, end="", flush=True)
+        # Both text chunks and iztro tool calls arrive as raw_response_events; branch on
+        # the data type. (Other event types — tool items, agent updates — are ignored.)
+        if event.type == "raw_response_event":
+            if isinstance(event.data, IztroToolsStreamEvent):
+                # The server just ran these chart tools — printed live, as they happen,
+                # before the text that uses them.
+                print(f"\n🔮 iztro computed: {', '.join(event.data.tools)}\n")
+            elif isinstance(event.data, ResponseTextDeltaEvent):
+                # end="" and flush=True keep it on one growing line, like live typing.
+                print(event.data.delta, end="", flush=True)
 
     # Once streaming ends, the whole text is also available in one piece.
     print("\n\n=== Full reply (for reference) ===")

@@ -37,6 +37,9 @@ def iztro_ziwei_agent(
         agent = iztro_ziwei_agent(tools=[add_to_calendar], api_key=KEY)
         session = ChatSession(external_user_id="user_42")
         result = await Runner.run(agent, "…", session=session)
+
+    Which server-side iztro tools ran is on ``result.raw_responses[i].iztro_tools``
+    (non-streaming) or surfaces as :class:`IztroToolsStreamEvent` (streaming).
     """
     return Agent(
         name=name,
