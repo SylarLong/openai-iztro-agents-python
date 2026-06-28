@@ -48,4 +48,4 @@ __all__ = [
     "IZTRO_ZIWEI_MODEL",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
