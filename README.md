@@ -1,6 +1,6 @@
 # openai-iztro-agents
 
-Build your own **Ziwei (Purple Star Astrology / 紫微斗数) agent** in Python.
+Build your own **Ziwei (Purple Star Astrology / 紫微斗数) or Qimen agent** in Python.
 
 > `pip install openai-iztro-agents` → `import iztro_agents`
 >
@@ -8,11 +8,11 @@ Build your own **Ziwei (Purple Star Astrology / 紫微斗数) agent** in Python.
 
 A thin layer on top of the [OpenAI Agents SDK](https://pypi.org/project/openai-agents/):
 
-- The **hosted Ziwei agent and its iztro chart tools** run on the server (hidden) — exposed as a stock SDK model.
+- The **hosted Ziwei and Qimen models and their astrology tools** run on the server (hidden) — exposed as stock SDK models.
 - **Your own function tools, MCP servers, and human-in-the-loop** run locally via the standard `Runner`.
 - **Conversation memory** lives on the server via `ChatSession` (the OpenAI Conversations–style session).
 
-You write ordinary OpenAI Agents SDK code — `Agent`, `Runner`, `@function_tool`, `agents.mcp`, `tool_choice`, `needs_approval` — and point the model at Ziwei.
+You write ordinary OpenAI Agents SDK code — `Agent`, `Runner`, `@function_tool`, `agents.mcp`, `tool_choice`, `needs_approval` — and point the model at Ziwei or Qimen.
 
 ## Install
 
@@ -48,6 +48,36 @@ asyncio.run(main())
 ```
 
 `iztro_ziwei_agent(...)` returns a **stock `agents.Agent`** whose model is the hosted Ziwei agent — so everything from the OpenAI Agents SDK works unchanged (`result.new_items`, `Runner.run_streamed`, handoffs, tracing, …).
+
+## Qimen model
+
+Use `iztro_qimen_agent(...)` or `iztro_qimen_model(...)` for the hosted Qimen model:
+
+```python
+from agents import Runner
+from iztro_agents import iztro_qimen_agent
+
+agent = iztro_qimen_agent(api_key="sk_ziwei_...")
+result = await Runner.run(agent, "用奇门问一下这个合作什么时候推进比较合适？")
+print(result.final_output)
+```
+
+`iztro-qimen-v3` uses only the hosted qimen tools (`qimen-qigua`, `qimen-yingqi`). Your local function tools, MCP servers, and human-in-the-loop still run through the normal OpenAI Agents SDK.
+
+## Tool events
+
+Hosted Ziwei/Qimen tools run inside the model, so the SDK does not expose them as local
+`tool_calls`. Instead, the wrapper reports them as tool events:
+
+```python
+result = await Runner.run(agent, "用奇门起局并判断应期。")
+event = result.raw_responses[-1].tool_event
+print(event.type, event.tools)  # tool_event ['qimen-qigua', 'qimen-yingqi']
+```
+
+Streaming emits `IztroToolEvent` before the text that uses the tool result. The older
+`.iztro_tools`, `last_iztro_tools`, and `IztroToolsStreamEvent` names still work for
+compatibility, but new code should use `tool_event` / `IztroToolEvent`.
 
 ## Conversation memory & resume (ChatSession)
 

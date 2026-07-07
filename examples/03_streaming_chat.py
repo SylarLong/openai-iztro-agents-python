@@ -20,7 +20,7 @@ from agents import Runner
 from openai.types.responses import ResponseTextDeltaEvent
 
 # Emitted as the server runs a hidden iztro chart tool — arrives in the same event stream.
-from iztro_agents import iztro_ziwei_agent, IztroToolsStreamEvent
+from iztro_agents import iztro_ziwei_agent, IztroToolEvent
 
 API_KEY = os.environ.get("ZIWEI_API_KEY") or "sk_ziwei_REPLACE_WITH_YOUR_KEY"
 
@@ -42,7 +42,7 @@ async def main() -> None:
         # Both text chunks and iztro tool calls arrive as raw_response_events; branch on
         # the data type. (Other event types — tool items, agent updates — are ignored.)
         if event.type == "raw_response_event":
-            if isinstance(event.data, IztroToolsStreamEvent):
+            if isinstance(event.data, IztroToolEvent):
                 # The server just ran these chart tools — printed live, as they happen,
                 # before the text that uses them.
                 print(f"\n🔮 iztro computed: {', '.join(event.data.tools)}\n")

@@ -80,8 +80,9 @@ async def main() -> None:
         "Today is 2026-06-26. I was born 1990-06-15 at 10:00, male. "
         "Ask the astrologer for one auspicious day next week, then put it on my calendar.",
     )
-    # The sub-agent's tools aren't in the orchestrator's result; read them off its model.
-    print("\n🔮 iztro computed:", ", ".join(ziwei_agent.model.last_iztro_tools))
+    # The sub-agent's tools aren't in the orchestrator's result; read the latest tool event.
+    tool_event = ziwei_agent.model.last_tool_event
+    print("\n🔮 iztro computed:", ", ".join(tool_event.tools if tool_event else []))
     print("\n=== Final reply ===")
     print(result.final_output)
     print("\nYour calendar now holds:", my_calendar)

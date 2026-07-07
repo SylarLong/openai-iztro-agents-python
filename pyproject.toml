@@ -5,12 +5,12 @@ build-backend = "hatchling.build"
 [project]
 name = "openai-iztro-agents"
 version = "0.2.0"
-description = "Build your own Ziwei (Purple Star Astrology) agent on the OpenAI Agents SDK — hosted brain + iztro, with your own local tools, MCP, and human-in-the-loop."
+description = "Build your own Ziwei or Qimen agent on the OpenAI Agents SDK - hosted astrology models plus your own local tools, MCP, and human-in-the-loop."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "iztro" }]
-keywords = ["ziwei", "astrology", "purple-star", "iztro", "openai-agents", "agents", "llm"]
+keywords = ["ziwei", "qimen", "astrology", "purple-star", "iztro", "openai-agents", "agents", "llm"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

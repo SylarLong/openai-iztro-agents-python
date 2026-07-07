@@ -10,11 +10,18 @@ from agents import Agent, OpenAIChatCompletionsModel
 
 from iztro_agents import (
     DEFAULT_BASE_URL,
+    IZTRO_QIMEN_MODEL,
     IZTRO_ZIWEI_MODEL,
+    TOOL_EVENT_TYPE,
     ChatSession,
+    IztroToolEvent,
+    IztroToolsStreamEvent,
+    iztro_qimen_agent,
+    iztro_qimen_model,
     iztro_ziwei_agent,
     iztro_ziwei_model,
 )
+from iztro_agents.model import iztro_qimen_model as qimen_model_factory
 from iztro_agents.model import iztro_ziwei_model as model_factory
 
 
@@ -52,8 +59,24 @@ def test_model_base_url_precedence_and_trailing_slash(monkeypatch):
 def test_model_default_constants():
     assert DEFAULT_BASE_URL == "https://chat-api.iztro.com"
     assert IZTRO_ZIWEI_MODEL == "iztro-ziwei-v3"
+    assert IZTRO_QIMEN_MODEL == "iztro-qimen-v3"
+    assert TOOL_EVENT_TYPE == "tool_event"
     model = iztro_ziwei_model(api_key="k")
     assert model.model == IZTRO_ZIWEI_MODEL
+
+
+def test_tool_event_alias_keeps_old_import_working():
+    event = IztroToolEvent(["qimen-qigua"])
+    assert event.type == "tool_event"
+    assert event.tools == ["qimen-qigua"]
+    assert isinstance(event, IztroToolsStreamEvent)
+
+
+def test_qimen_model_factory_uses_qimen_model():
+    model = iztro_qimen_model(api_key="k")
+    assert isinstance(model, OpenAIChatCompletionsModel)
+    assert model.model == IZTRO_QIMEN_MODEL
+    assert _base_url(model) == f"{DEFAULT_BASE_URL}/v2/"
 
 
 def test_model_custom_model_name():
@@ -96,6 +119,16 @@ def test_agent_defaults_empty_tools():
     assert agent.mcp_servers == []
 
 
+def test_qimen_agent_factory_uses_qimen_model():
+    agent = iztro_qimen_agent(api_key="k")
+    assert isinstance(agent, Agent)
+    assert agent.name == "Qimen"
+    assert isinstance(agent.model, OpenAIChatCompletionsModel)
+    assert agent.model.model == IZTRO_QIMEN_MODEL
+    assert agent.tools == []
+    assert agent.mcp_servers == []
+
+
 def test_agent_forwards_extra_kwargs():
     # Unknown-to-the-factory kwargs (e.g. tool_use_behavior) reach the SDK Agent.
     agent = iztro_ziwei_agent(api_key="k", tool_use_behavior="stop_on_first_tool")
@@ -119,6 +152,7 @@ def test_session_requires_api_key(monkeypatch):
 def test_reexport_identity():
     # The package re-exports the same factory object documented in model.py.
     assert iztro_ziwei_model is model_factory
+    assert iztro_qimen_model is qimen_model_factory
 
 
 if __name__ == "__main__":
