@@ -2,7 +2,8 @@
 
 Covers lazy server-side id creation, add/get/pop/clear, multi-turn accumulation,
 ownership by ``external_user_id`` + ``list_user_conversations``, resuming an explicit
-id without a create call, and that the auth header is sent.
+id without a create call, forking a full conversation or prefix, and that the auth
+header is sent.
 """
 
 import asyncio
@@ -128,6 +129,57 @@ def test_resume_explicit_id_skips_create():
         assert items[0]["content"] == "earlier"
         assert backend._counter == 0                  # no POST /conversations happened
         await s.close()
+
+    asyncio.run(go())
+
+
+def test_fork_full_conversation_and_prefix(monkeypatch):
+    backend = InMemoryConversations()
+    real_client = httpx.AsyncClient
+
+    def offline_client(*args, **kwargs):
+        kwargs["transport"] = httpx.MockTransport(backend)
+        return real_client(*args, **kwargs)
+
+    monkeypatch.setattr(session_mod.httpx, "AsyncClient", offline_client)
+    source = _session(backend, external_user_id="alice")
+
+    async def go():
+        await source.add_items([
+            {"role": "user", "content": "q1"},
+            {"role": "assistant", "content": "a1"},
+            {"role": "user", "content": "q2"},
+            {"role": "assistant", "content": "a2"},
+        ])
+
+        full = await source.fork()
+        prefix = await source.fork(item_count=2)
+        empty = await source.fork(item_count=0)
+
+        assert full.session_id != source.session_id
+        assert [i["content"] for i in await full.get_items()] == ["q1", "a1", "q2", "a2"]
+        assert [i["content"] for i in await prefix.get_items()] == ["q1", "a1"]
+        assert await empty.get_items() == []
+        assert backend.owners[full.session_id] == "alice"
+
+        for session in (source, full, prefix, empty):
+            await session.close()
+
+    asyncio.run(go())
+
+
+def test_fork_rejects_negative_item_count():
+    backend = InMemoryConversations()
+    source = _session(backend)
+
+    async def go():
+        try:
+            await source.fork(item_count=-1)
+        except ValueError as error:
+            assert "zero or greater" in str(error)
+        else:
+            raise AssertionError("negative item_count should fail")
+        await source.close()
 
     asyncio.run(go())
 

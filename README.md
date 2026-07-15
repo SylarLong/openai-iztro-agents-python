@@ -99,6 +99,19 @@ await list_user_conversations("user_42")
 
 `session_id` precedence: explicit `conversation_id` > a server-assigned id created lazily on first use.
 
+Fork a complete conversation, or copy only the first N SDK session items before
+continuing with replacement text:
+
+```python
+forked = await session.fork()                 # copy the whole conversation
+edited = await session.fork(item_count=4)    # copy items 0..3, then branch
+await Runner.run(agent, "Use this edited question instead", session=edited)
+```
+
+The runnable [ChatSession full-stack demo](examples/fullstack-demo) combines this with
+conversation lists, titles, deletion, history editing, live tool/chart indicators, and
+SSE streaming while keeping the API key on the backend.
+
 ## Tool-call modes
 
 Your tools use the SDK's native controls; the iztro tools are hidden (toggle with `enable_iztro_call`):

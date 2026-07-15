@@ -70,6 +70,7 @@ class ChatSession(SessionABC):
         timeout: float = 30.0,
     ):
         self._api_key, self._base = _resolve(api_key, base_url)
+        self._timeout = timeout
         self._conversation_id = conversation_id
         self.external_user_id = external_user_id
         self._http = httpx.AsyncClient(
@@ -127,8 +128,64 @@ class ChatSession(SessionABC):
         resp.raise_for_status()
         self._conversation_id = None
 
+    async def fork(
+        self,
+        *,
+        item_count: int | None = None,
+        external_user_id: str | None = None,
+    ) -> "ChatSession":
+        """Copy this conversation into a new server-side conversation.
+
+        ``item_count`` keeps the first N items. Leave it as ``None`` to copy the
+        entire conversation. Keeping the prefix before a user message and then
+        running the agent with replacement text is a safe way to implement message
+        editing without mutating the original branch.
+
+        The returned session owns its HTTP client; callers should close it when they
+        are done. Pass ``external_user_id`` when resuming a session that was created
+        without one so the fork appears in that user's conversation list.
+        """
+        if item_count is not None and item_count < 0:
+            raise ValueError("item_count must be zero or greater")
+
+        items = await self.get_items()
+        copied_items = items if item_count is None else items[:item_count]
+        forked = ChatSession(
+            external_user_id=(
+                external_user_id if external_user_id is not None else self.external_user_id
+            ),
+            api_key=self._api_key,
+            base_url=self._base,
+            timeout=self._timeout,
+        )
+        try:
+            # get_items() also creates an intentionally empty fork when item_count is 0.
+            await forked.get_items()
+            await forked.add_items(list(copied_items))
+        except Exception:
+            await forked.close()
+            raise
+        return forked
+
     async def close(self) -> None:
         await self._http.aclose()
+
+    @classmethod
+    async def list_user_conversations(
+        cls,
+        external_user_id: str,
+        *,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        limit: int = 50,
+    ) -> list[dict[str, Any]]:
+        """List all conversations owned by one application user."""
+        return await list_user_conversations(
+            external_user_id,
+            api_key=api_key,
+            base_url=base_url,
+            limit=limit,
+        )
 
 
 async def list_user_conversations(

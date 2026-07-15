@@ -18,3 +18,10 @@ venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
+# Full-stack demo local state and generated frontend output
+examples/fullstack-demo/backend/.env
+examples/fullstack-demo/backend/data/
+examples/fullstack-demo/frontend/.env
+examples/fullstack-demo/frontend/node_modules/
+examples/fullstack-demo/frontend/dist/

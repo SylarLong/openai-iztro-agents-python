@@ -58,6 +58,7 @@ That's it. The reading prints to your screen.
 | `09_limit_length_and_cost.py` | Cap output size to bound **cost** in production (not a quality setting). | `ModelSettings(max_tokens=…)` |
 | `10_chinese_chat.py` | Do everything in Chinese (中文全程对话). | unicode end-to-end |
 | `11_agent_as_tool.py` | Use the Ziwei agent as **one tool** inside your own GPT agent. | agents-as-tools |
+| `fullstack-demo/` | A React + FastAPI chat app with session list, rename, delete, fork, message editing, chart-tool history, and streaming. | production integration shape |
 
 ## A few words you'll see
 
