@@ -5,7 +5,7 @@ for one current matter, so no birth date, birth hour, or gender is required.
 
 ────────────────────────────────────────────────────────────────────────────
 RUN IT            python examples/12_qimen_decision.py
-WHAT YOU'LL SEE   A chart-grounded decision, timing windows, and hosted tool events.
+WHAT YOU'LL SEE   A chart-grounded decision, timing windows, and public calculation names.
 ────────────────────────────────────────────────────────────────────────────
 """
 
@@ -49,7 +49,7 @@ async def main() -> None:
 
     for response in result.raw_responses:
         if response.tool_event:
-            print("🔮 hosted Qimen tools:", " -> ".join(response.tool_event.tools))
+            print("🔮 Iztro calculation:", " -> ".join(response.tool_event.tools))
     print(result.final_output)
 
 

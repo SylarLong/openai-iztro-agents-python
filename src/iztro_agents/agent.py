@@ -65,15 +65,14 @@ def iztro_qimen_agent(
 ) -> Agent:
     """Return a stock ``agents.Agent`` whose model is the hosted Qimen agent.
 
-    The Qimen model casts one chart from the question time for one concrete matter; it
-    needs no birth details. It calls hosted ``qimen-qigua`` first and, when timing is
-    relevant, ``qimen-yingqi`` after selecting the necessary yongshen. Pin a user's
-    local question time with ``ModelSettings(metadata={"current_datetime": ...})``.
+    The Qimen model handles one concrete matter from the question time and needs no
+    birth details. Pin a user's local question time with
+    ``ModelSettings(metadata={"current_datetime": ...})``.
 
-    Developer ``tools`` and ``mcp_servers`` run locally through the OpenAI Agents SDK.
-    The Qimen tools stay hosted and are surfaced through ``tool_event`` /
+    Public calculation names returned by the API are available through ``tool_event`` /
     ``iztro_tools`` and :class:`IztroToolEvent`, the same way as
-    ``iztro_ziwei_agent``.
+    ``iztro_ziwei_agent``. Developer ``tools`` and ``mcp_servers`` use the standard
+    OpenAI Agents SDK interfaces.
     """
     return Agent(
         name=name,

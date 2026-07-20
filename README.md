@@ -74,13 +74,13 @@ It casts the chart from the question time, so it does **not** need a birth date,
 | `iztro-qimen-v3` | One current event, decision, outcome, and optional timing | The concrete situation and question time |
 | `iztro-ziwei-v3` | Natal profile, compatibility, and longer-term fortune cycles | Birth date, birth time, and gender |
 
-### How a Qimen run works
+### Qimen request rules
 
-1. The model calls hosted `qimen-qigua` to cast one chart for the matter and identify the relevant chart evidence.
-2. It selects the primary and supporting *yongshen*—the chart symbols representing the people or matter being judged—and makes the decision analysis.
-3. When the question asks **when**, it calls hosted `qimen-yingqi` after `qimen-qigua` to calculate real calendar candidates for the selected *yongshen*.
+1. Ask about one concrete matter and put unrelated decisions in separate runs.
+2. Give the current facts, choices, and constraint, then ask one explicit decision.
+3. When timing matters, ask for an action window and pass the user's local question time.
 
-Both tools are automatic. Do not define them locally or force their arguments in the prompt. A date returned by `qimen-yingqi` is a chart trigger to interpret with the whole chart, not a guaranteed outcome.
+Timing results are candidate trigger windows to interpret with the complete answer, not guaranteed outcomes.
 
 ### Qimen quickstart
 
@@ -114,14 +114,13 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
-For a strong request, describe the current situation, ask one decision, and say whether you need timing. Put unrelated matters in separate runs so each receives its own chart. See the complete [`12_qimen_decision.py`](./examples/12_qimen_decision.py) example and the [Qimen model guide](https://api-doc.iztro.com/sdk/qimen).
+For a strong request, describe the current situation, ask one decision, and say whether you need timing. Put unrelated matters in separate runs so each receives its own chart. See the complete [`12_qimen_decision.py`](./examples/12_qimen_decision.py) example and compare both public models in the [Models guide](https://api-doc.iztro.com/sdk/qimen).
 
-`iztro-qimen-v3` uses only the hosted Qimen tools. Your local function tools, MCP servers, and human-in-the-loop still run through the normal OpenAI Agents SDK.
+Public Iztro calculation names are available through Iztro tool events. Your own function tools, MCP servers, and human-in-the-loop continue to use the normal OpenAI Agents SDK interfaces.
 
-## Tool events
+## Iztro calculation events
 
-Hosted Ziwei/Qimen tools run inside the model, so the SDK does not expose them as local
-`tool_calls`. Instead, the wrapper reports them as tool events:
+The wrapper exposes the public calculation names returned by the API as Iztro tool events:
 
 ```python
 result = await Runner.run(agent, "用奇门起局并判断应期。")
@@ -129,7 +128,9 @@ event = result.raw_responses[-1].tool_event
 print(event.type, event.tools)  # tool_event ['qimen-qigua', 'qimen-yingqi']
 ```
 
-Streaming emits `IztroToolEvent` before the text that uses the tool result. The older
+The complete list of public return values is in the [Models guide](https://api-doc.iztro.com/sdk/qimen). Do not depend on undocumented names or infer internal implementation from these values.
+
+Streaming can include `IztroToolEvent`. The older
 `.iztro_tools`, `last_iztro_tools`, and `IztroToolsStreamEvent` names still work for
 compatibility, but new code should use `tool_event` / `IztroToolEvent`.
 
