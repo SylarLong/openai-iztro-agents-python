@@ -58,6 +58,7 @@ That's it. The reading prints to your screen.
 | `09_limit_length_and_cost.py` | Cap output size to bound **cost** in production (not a quality setting). | `ModelSettings(max_tokens=…)` |
 | `10_chinese_chat.py` | Do everything in Chinese (中文全程对话). | unicode end-to-end |
 | `11_agent_as_tool.py` | Use the Ziwei agent as **one tool** inside your own GPT agent. | agents-as-tools |
+| `12_qimen_decision.py` | Analyze one concrete decision and, when needed, calculate action windows with Qimen. | `iztro_qimen_agent` + question time |
 | `fullstack-demo/` | A React + FastAPI chat app with session list, rename, delete, fork, message editing, chart-tool history, and streaming. | production integration shape |
 
 ## A few words you'll see
@@ -78,6 +79,9 @@ That's it. The reading prints to your screen.
 - **ChatSession** — optional memory, so the agent remembers earlier messages. History lives
   on the server under a conversation id; **save `session.session_id`** to resume the chat
   later (see `04_memory_and_resume.py`). `list_user_conversations(user_id)` lists a user's chats.
+- **Qimen** — use `iztro_qimen_agent(...)` for one concrete, time-sensitive matter. It casts
+  from the question time and needs no birth details; keep unrelated decisions in separate runs
+  so each matter gets its own chart (see `12_qimen_decision.py`).
 
 ## If something goes wrong
 

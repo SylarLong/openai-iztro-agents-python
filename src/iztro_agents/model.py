@@ -210,8 +210,9 @@ def iztro_qimen_model(
 ) -> IztroZiweiModel:
     """Build the hosted Qimen agent as a stock OpenAI Agents SDK model.
 
-    Qimen uses the same transport and event surface as Ziwei. Server-side qimen tools
-    such as ``qimen-qigua`` and ``qimen-yingqi`` appear in
+    ``iztro-qimen-v3`` handles one concrete, time-sensitive matter and needs no birth
+    details. It uses the same transport and event surface as Ziwei. Server-side Qimen
+    tools such as ``qimen-qigua`` and ``qimen-yingqi`` appear in
     ``result.raw_responses[i].tool_event`` / ``.iztro_tools`` or as
     :class:`IztroToolEvent`.
     """

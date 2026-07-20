@@ -192,6 +192,23 @@ def test_tool_settings_passthrough():
     assert first["parallel_tool_calls"] is True
 
 
+def test_qimen_question_time_metadata_passthrough():
+    """The documented ModelSettings form must reach Chat Completions unchanged."""
+    handler = mock_chat(assistant_text("ok"))
+    agent = agent_with(
+        handler,
+        model_settings=ModelSettings(
+            metadata={"current_datetime": "2026-07-20T14:30:00+08:00"}
+        ),
+    )
+
+    _run(agent, "Should I move this partnership forward now?")
+
+    assert handler.requests[0]["metadata"] == {
+        "current_datetime": "2026-07-20T14:30:00+08:00"
+    }
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_") and callable(fn):

@@ -22,6 +22,16 @@ pip install openai-iztro-agents
 
 Get an API key (`sk_ziwei_*`) from the developer console.
 
+Set it once in the server environment so the Agent and `ChatSession` factories can read it:
+
+```text
+# macOS / Linux
+export ZIWEI_API_KEY="sk_ziwei_..."
+
+# PowerShell
+$env:ZIWEI_API_KEY="sk_ziwei_..."
+```
+
 ## Quickstart
 
 ```python
@@ -51,18 +61,62 @@ asyncio.run(main())
 
 ## Qimen model
 
-Use `iztro_qimen_agent(...)` or `iztro_qimen_model(...)` for the hosted Qimen model:
+`iztro-qimen-v3` is a hosted Qimen Dunjia model for a **time-sensitive decision about one concrete matter**. Use it for questions such as:
+
+- Should we advance this partnership now, negotiate first, or pause?
+- How is this interview, offer, launch, trip, or relationship decision likely to develop?
+- If the matter can move forward, which dates are the meaningful action windows?
+
+It casts the chart from the question time, so it does **not** need a birth date, birth hour, or gender. Use `iztro-ziwei-v3` instead for natal personality, compatibility, or long-range life and fortune analysis.
+
+| Model | Best for | Required input |
+| --- | --- | --- |
+| `iztro-qimen-v3` | One current event, decision, outcome, and optional timing | The concrete situation and question time |
+| `iztro-ziwei-v3` | Natal profile, compatibility, and longer-term fortune cycles | Birth date, birth time, and gender |
+
+### How a Qimen run works
+
+1. The model calls hosted `qimen-qigua` to cast one chart for the matter and identify the relevant chart evidence.
+2. It selects the primary and supporting *yongshen*—the chart symbols representing the people or matter being judged—and makes the decision analysis.
+3. When the question asks **when**, it calls hosted `qimen-yingqi` after `qimen-qigua` to calculate real calendar candidates for the selected *yongshen*.
+
+Both tools are automatic. Do not define them locally or force their arguments in the prompt. A date returned by `qimen-yingqi` is a chart trigger to interpret with the whole chart, not a guaranteed outcome.
+
+### Qimen quickstart
+
+Use `iztro_qimen_agent(...)` for a ready-to-run stock `Agent`, or `iztro_qimen_model(...)` when constructing the `Agent` yourself:
 
 ```python
-from agents import Runner
+import asyncio
+import os
+
+from agents import ModelSettings, Runner
 from iztro_agents import iztro_qimen_agent
 
-agent = iztro_qimen_agent(api_key="sk_ziwei_...")
-result = await Runner.run(agent, "用奇门问一下这个合作什么时候推进比较合适？")
-print(result.final_output)
+async def main() -> None:
+    agent = iztro_qimen_agent(
+        api_key=os.environ["ZIWEI_API_KEY"],
+        # Optional: pin the user's local question time for reproducible charts.
+        # If omitted, the service uses the request time.
+        model_settings=ModelSettings(
+            metadata={"current_datetime": "2026-07-20T14:30:00+08:00"}
+        ),
+    )
+    result = await Runner.run(
+        agent,
+        (
+            "我们正在谈一项渠道合作，已经沟通两次，但分成和上线时间还没定。"
+            "现在适合主动推进、继续谈判，还是暂缓？如果适合推进，请给出近期时间窗口和行动建议。"
+        ),
+    )
+    print(result.final_output)
+
+asyncio.run(main())
 ```
 
-`iztro-qimen-v3` uses only the hosted qimen tools (`qimen-qigua`, `qimen-yingqi`). Your local function tools, MCP servers, and human-in-the-loop still run through the normal OpenAI Agents SDK.
+For a strong request, describe the current situation, ask one decision, and say whether you need timing. Put unrelated matters in separate runs so each receives its own chart. See the complete [`12_qimen_decision.py`](./examples/12_qimen_decision.py) example and the [Qimen model guide](https://api-doc.iztro.com/sdk/qimen).
+
+`iztro-qimen-v3` uses only the hosted Qimen tools. Your local function tools, MCP servers, and human-in-the-loop still run through the normal OpenAI Agents SDK.
 
 ## Tool events
 
