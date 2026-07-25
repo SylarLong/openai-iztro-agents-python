@@ -35,6 +35,7 @@ async def main() -> None:
         # Optional. Pin the user's local question time when you need a reproducible chart.
         # Otherwise the hosted service uses the request time.
         model_settings=ModelSettings(
+            extra_body={"thinking": "deep"},
             metadata={"current_datetime": "2026-07-20T14:30:00+08:00"}
         ),
     )

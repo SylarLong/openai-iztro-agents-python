@@ -5,8 +5,10 @@ trimming), the ``/v2`` suffix, and that ``iztro_ziwei_agent`` passes SDK argumen
 straight through to a stock ``Agent``.
 """
 
+import httpx
 import pytest
-from agents import Agent, OpenAIChatCompletionsModel
+from agents import Agent, ModelSettings, OpenAIChatCompletionsModel, Runner
+from openai import AsyncOpenAI
 
 from iztro_agents import (
     DEFAULT_BASE_URL,
@@ -16,11 +18,13 @@ from iztro_agents import (
     ChatSession,
     IztroToolEvent,
     IztroToolsStreamEvent,
+    IztroZiweiModel,
     iztro_qimen_agent,
     iztro_qimen_model,
     iztro_ziwei_agent,
     iztro_ziwei_model,
 )
+from _mock import assistant_text, mock_chat
 from iztro_agents.model import iztro_qimen_model as qimen_model_factory
 from iztro_agents.model import iztro_ziwei_model as model_factory
 
@@ -82,6 +86,57 @@ def test_qimen_model_factory_uses_qimen_model():
 def test_model_custom_model_name():
     model = iztro_ziwei_model(api_key="k", model="iztro-ziwei-v9")
     assert model.model == "iztro-ziwei-v9"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "model_name",
+    (
+        IZTRO_ZIWEI_MODEL,
+        IZTRO_QIMEN_MODEL,
+    ),
+)
+async def test_deep_thinking_in_model_settings_reaches_wire(model_name):
+    handler = mock_chat(assistant_text("ok", model=model_name))
+    client = AsyncOpenAI(
+        base_url="http://ziwei.test/v2",
+        api_key="k",
+        http_client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    model = IztroZiweiModel(model=model_name, openai_client=client)
+    agent = Agent(
+        name="Iztro",
+        model=model,
+        model_settings=ModelSettings(
+            max_tokens=123,
+            extra_body={
+                "thinking": "deep",
+                "metadata": {"current_datetime": "2026-07-20T14:30:00+08:00"},
+            },
+        ),
+    )
+
+    await Runner.run(agent, "hi")
+
+    request = handler.requests[0]
+    assert request["thinking"] == "deep"
+    assert request["max_tokens"] == 123
+    assert request["metadata"]["current_datetime"] == "2026-07-20T14:30:00+08:00"
+
+
+@pytest.mark.asyncio
+async def test_default_factory_omits_thinking():
+    handler = mock_chat(assistant_text("ok"))
+    client = AsyncOpenAI(
+        base_url="http://ziwei.test/v2",
+        api_key="k",
+        http_client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+    )
+    model = IztroZiweiModel(model=IZTRO_ZIWEI_MODEL, openai_client=client)
+
+    await Runner.run(Agent(name="Ziwei", model=model), "hi")
+
+    assert "thinking" not in handler.requests[0]
 
 
 # ── agent factory ────────────────────────────────────────────────────────────

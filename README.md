@@ -59,6 +59,21 @@ asyncio.run(main())
 
 `iztro_ziwei_agent(...)` returns a **stock `agents.Agent`** whose model is the hosted Ziwei agent — so everything from the OpenAI Agents SDK works unchanged (`result.new_items`, `Runner.run_streamed`, handoffs, tracing, …).
 
+## Thinking modes
+
+Both hosted models use standard generation by default. Configure deep thinking through the OpenAI Agents SDK's `ModelSettings`:
+
+```python
+from agents import ModelSettings
+
+standard_agent = iztro_ziwei_agent()
+deep_agent = iztro_qimen_agent(
+    model_settings=ModelSettings(extra_body={"thinking": "deep"}),
+)
+```
+
+Omit `thinking` for standard generation. Set it to `"deep"` for comprehensive reports, difficult chart synthesis, and Qimen decisions that require several pieces of evidence. `thinking` is an Iztro provider extension, so it belongs in `ModelSettings.extra_body`, not as an Agent factory argument.
+
 ## Qimen model
 
 `iztro-qimen-v3` is a hosted Qimen Dunjia model for a **time-sensitive decision about one concrete matter**. Use it for questions such as:
@@ -99,6 +114,7 @@ async def main() -> None:
         # Optional: pin the user's local question time for reproducible charts.
         # If omitted, the service uses the request time.
         model_settings=ModelSettings(
+            extra_body={"thinking": "deep"},
             metadata={"current_datetime": "2026-07-20T14:30:00+08:00"}
         ),
     )
