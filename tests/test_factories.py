@@ -9,6 +9,7 @@ import httpx
 import pytest
 from agents import Agent, ModelSettings, OpenAIChatCompletionsModel, Runner
 from openai import AsyncOpenAI
+from openai.types.shared import Reasoning
 
 from iztro_agents import (
     DEFAULT_BASE_URL,
@@ -90,13 +91,15 @@ def test_model_custom_model_name():
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "model_name",
+    ("model_name", "effort"),
     (
-        IZTRO_ZIWEI_MODEL,
-        IZTRO_QIMEN_MODEL,
+        (IZTRO_ZIWEI_MODEL, "low"),
+        (IZTRO_ZIWEI_MODEL, "high"),
+        (IZTRO_QIMEN_MODEL, "low"),
+        (IZTRO_QIMEN_MODEL, "high"),
     ),
 )
-async def test_deep_thinking_in_model_settings_reaches_wire(model_name):
+async def test_native_reasoning_effort_reaches_wire(model_name, effort):
     handler = mock_chat(assistant_text("ok", model=model_name))
     client = AsyncOpenAI(
         base_url="http://ziwei.test/v2",
@@ -109,23 +112,22 @@ async def test_deep_thinking_in_model_settings_reaches_wire(model_name):
         model=model,
         model_settings=ModelSettings(
             max_tokens=123,
-            extra_body={
-                "thinking": "deep",
-                "metadata": {"current_datetime": "2026-07-20T14:30:00+08:00"},
-            },
+            reasoning=Reasoning(effort=effort),
+            metadata={"current_datetime": "2026-07-20T14:30:00+08:00"},
         ),
     )
 
     await Runner.run(agent, "hi")
 
     request = handler.requests[0]
-    assert request["thinking"] == "deep"
+    assert request["reasoning_effort"] == effort
+    assert "thinking" not in request
     assert request["max_tokens"] == 123
     assert request["metadata"]["current_datetime"] == "2026-07-20T14:30:00+08:00"
 
 
 @pytest.mark.asyncio
-async def test_default_factory_omits_thinking():
+async def test_default_factory_omits_reasoning_effort():
     handler = mock_chat(assistant_text("ok"))
     client = AsyncOpenAI(
         base_url="http://ziwei.test/v2",
@@ -136,6 +138,7 @@ async def test_default_factory_omits_thinking():
 
     await Runner.run(Agent(name="Ziwei", model=model), "hi")
 
+    assert "reasoning_effort" not in handler.requests[0]
     assert "thinking" not in handler.requests[0]
 
 

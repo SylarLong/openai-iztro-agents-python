@@ -59,20 +59,21 @@ asyncio.run(main())
 
 `iztro_ziwei_agent(...)` returns a **stock `agents.Agent`** whose model is the hosted Ziwei agent — so everything from the OpenAI Agents SDK works unchanged (`result.new_items`, `Runner.run_streamed`, handoffs, tracing, …).
 
-## Thinking modes
+## Reasoning effort
 
-Both hosted models use standard generation by default. Configure deep thinking through the OpenAI Agents SDK's `ModelSettings`:
+Both hosted models follow the OpenAI Agents SDK's native `ModelSettings.reasoning` contract:
 
 ```python
 from agents import ModelSettings
+from openai.types.shared import Reasoning
 
 standard_agent = iztro_ziwei_agent()
 deep_agent = iztro_qimen_agent(
-    model_settings=ModelSettings(extra_body={"thinking": "deep"}),
+    model_settings=ModelSettings(reasoning=Reasoning(effort="high")),
 )
 ```
 
-Omit `thinking` for standard generation. Set it to `"deep"` for comprehensive reports, difficult chart synthesis, and Qimen decisions that require several pieces of evidence. `thinking` is an Iztro provider extension, so it belongs in `ModelSettings.extra_body`, not as an Agent factory argument.
+Omit `reasoning`, or use `none`, `minimal`, or `low`, for the faster non-thinking path. `medium`, `high`, and `xhigh` use the same deep-reasoning path; `high` is a clear default for comprehensive reports, difficult chart synthesis, and multi-evidence Qimen decisions. No Iztro-specific setting or package upgrade is required.
 
 ## Qimen model
 
@@ -106,6 +107,7 @@ import asyncio
 import os
 
 from agents import ModelSettings, Runner
+from openai.types.shared import Reasoning
 from iztro_agents import iztro_qimen_agent
 
 async def main() -> None:
@@ -114,7 +116,7 @@ async def main() -> None:
         # Optional: pin the user's local question time for reproducible charts.
         # If omitted, the service uses the request time.
         model_settings=ModelSettings(
-            extra_body={"thinking": "deep"},
+            reasoning=Reasoning(effort="high"),
             metadata={"current_datetime": "2026-07-20T14:30:00+08:00"}
         ),
     )

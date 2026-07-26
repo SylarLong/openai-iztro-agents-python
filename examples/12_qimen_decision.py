@@ -14,6 +14,7 @@ import os
 import sys
 
 from agents import ModelSettings, Runner
+from openai.types.shared import Reasoning
 
 from iztro_agents import iztro_qimen_agent
 
@@ -35,7 +36,7 @@ async def main() -> None:
         # Optional. Pin the user's local question time when you need a reproducible chart.
         # Otherwise the hosted service uses the request time.
         model_settings=ModelSettings(
-            extra_body={"thinking": "deep"},
+            reasoning=Reasoning(effort="high"),
             metadata={"current_datetime": "2026-07-20T14:30:00+08:00"}
         ),
     )
