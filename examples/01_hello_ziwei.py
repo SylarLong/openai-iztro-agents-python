@@ -28,7 +28,8 @@ try:
 except Exception:
     pass
 
-from agents import Runner
+from agents import ModelSettings, Runner
+from openai.types.shared import Reasoning
 
 from iztro_agents import iztro_ziwei_agent
 
@@ -41,6 +42,7 @@ async def main() -> None:
     # read like a seasoned 紫微斗数 master rather than a generic assistant: ask it to cite
     # the actual chart and be specific. The chart itself is computed for you on the server.
     agent = iztro_ziwei_agent(
+        model_settings=ModelSettings(reasoning=Reasoning(effort="high")),
         instructions=(
             "你是一位资深的紫微斗数命理师。请基于用户的真实命盘给出专业、具体、有条理的解读：\n"
             "- 点出命宫主星、身宫、关键的四化（化禄/化权/化科/化忌）与重要宫位；\n"

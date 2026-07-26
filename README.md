@@ -66,14 +66,15 @@ Both hosted models follow the OpenAI Agents SDK's native `ModelSettings.reasonin
 ```python
 from agents import ModelSettings
 from openai.types.shared import Reasoning
+from iztro_agents import iztro_qimen_agent, iztro_ziwei_agent
 
-standard_agent = iztro_ziwei_agent()
-deep_agent = iztro_qimen_agent(
-    model_settings=ModelSettings(reasoning=Reasoning(effort="high")),
-)
+deep_settings = ModelSettings(reasoning=Reasoning(effort="high"))
+
+ziwei = iztro_ziwei_agent(model_settings=deep_settings)
+qimen = iztro_qimen_agent(model_settings=deep_settings)
 ```
 
-Omit `reasoning`, or use `none`, `minimal`, or `low`, for the faster non-thinking path. `medium`, `high`, and `xhigh` use the same deep-reasoning path; `high` is a clear default for comprehensive reports, difficult chart synthesis, and multi-evidence Qimen decisions. No Iztro-specific setting or package upgrade is required.
+`ModelSettings` is model-independent: configure Ziwei and Qimen in exactly the same way. Omit `reasoning`, or use `none`, `minimal`, or `low`, for the faster non-thinking path. `medium`, `high`, and `xhigh` use the same deep-reasoning path; `high` is a clear default for comprehensive reports, difficult chart synthesis, and multi-evidence decisions. No Iztro-specific setting or package upgrade is required. See [Model settings](https://api-doc.iztro.com/sdk/model-settings).
 
 ## Qimen model
 
@@ -132,7 +133,7 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
-For a strong request, describe the current situation, ask one decision, and say whether you need timing. Put unrelated matters in separate runs so each receives its own chart. See the complete [`12_qimen_decision.py`](./examples/12_qimen_decision.py) example and compare both public models in the [Models guide](https://api-doc.iztro.com/sdk/qimen).
+For a strong request, describe the current situation, ask one decision, and say whether you need timing. Put unrelated matters in separate runs so each receives its own chart. See the complete [`12_qimen_decision.py`](./examples/12_qimen_decision.py) example and compare both public models in the [Models guide](https://api-doc.iztro.com/sdk/models).
 
 Public Iztro calculation names are available through Iztro tool events. Your own function tools, MCP servers, and human-in-the-loop continue to use the normal OpenAI Agents SDK interfaces.
 
@@ -146,7 +147,7 @@ event = result.raw_responses[-1].tool_event
 print(event.type, event.tools)  # tool_event ['qimen-qigua', 'qimen-yingqi']
 ```
 
-The complete list of public return values is in the [Models guide](https://api-doc.iztro.com/sdk/qimen). Do not depend on undocumented names or infer internal implementation from these values.
+The complete list of public return values is in the [Models guide](https://api-doc.iztro.com/sdk/models). Do not depend on undocumented names or infer internal implementation from these values.
 
 Streaming can include `IztroToolEvent`. The older
 `.iztro_tools`, `last_iztro_tools`, and `IztroToolsStreamEvent` names still work for

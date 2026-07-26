@@ -47,7 +47,7 @@ That's it. The reading prints to your screen.
 
 | File | What it teaches | Key idea |
 |---|---|---|
-| `01_hello_ziwei.py` | Your first program: one rich, professional, chart-grounded reading. | the basics |
+| `01_hello_ziwei.py` | Your first program: one rich, professional, chart-grounded reading. | Ziwei + `ModelSettings.reasoning` |
 | `02_prompt_gallery.py` | **The showcase** — the same chart read for personality, fortune (流年运势), career, love, and wealth. Copy any prompt. | depth & variety |
 | `03_streaming_chat.py` | Show the reply as it's typed, live. | `Runner.run_streamed` |
 | `04_memory_and_resume.py` | Remember a conversation and **resume it later** (save the id, reload it next request). | `ChatSession` |
@@ -73,9 +73,9 @@ That's it. The reading prints to your screen.
 - **Depth is the point.** Let the agent answer fully — the rich, chart-grounded reading is
   what makes this different from a generic chatbot. Shape *what* it covers and its tone in
   the `instructions` (see `02_prompt_gallery.py`), not by forcing it short.
-- **ModelSettings** — knobs for the model. `max_tokens` is a hard ceiling on reply length
-  for **cost control in production** (see `09_limit_length_and_cost.py`) — a budget limit,
-  not a quality setting.
+- **ModelSettings** — standard OpenAI model options shared by Ziwei and Qimen.
+  `reasoning=Reasoning(effort="high")` selects deep reasoning; `max_tokens` is a separate
+  hard ceiling for **cost control in production** (see `09_limit_length_and_cost.py`).
 - **ChatSession** — optional memory, so the agent remembers earlier messages. History lives
   on the server under a conversation id; **save `session.session_id`** to resume the chat
   later (see `04_memory_and_resume.py`). `list_user_conversations(user_id)` lists a user's chats.
