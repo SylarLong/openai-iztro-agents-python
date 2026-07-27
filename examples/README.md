@@ -76,6 +76,8 @@ That's it. The reading prints to your screen.
 - **ModelSettings** — standard OpenAI model options shared by Ziwei and Qimen.
   `reasoning=Reasoning(effort="high")` selects deep reasoning; `max_tokens` is a separate
   hard ceiling for **cost control in production** (see `09_limit_length_and_cost.py`).
+  `extra_body={"language": "vi"}` forces an unmixed response language, while
+  `metadata.current_datetime` carries the user's local Qimen question time.
 - **ChatSession** — optional memory, so the agent remembers earlier messages. History lives
   on the server under a conversation id; **save `session.session_id`** to resume the chat
   later (see `04_memory_and_resume.py`). `list_user_conversations(user_id)` lists a user's chats.
