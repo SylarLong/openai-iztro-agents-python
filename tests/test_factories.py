@@ -93,8 +93,10 @@ def test_model_custom_model_name():
 @pytest.mark.parametrize(
     ("model_name", "effort"),
     (
+        (IZTRO_ZIWEI_MODEL, "none"),
         (IZTRO_ZIWEI_MODEL, "low"),
         (IZTRO_ZIWEI_MODEL, "high"),
+        (IZTRO_QIMEN_MODEL, "none"),
         (IZTRO_QIMEN_MODEL, "low"),
         (IZTRO_QIMEN_MODEL, "high"),
     ),

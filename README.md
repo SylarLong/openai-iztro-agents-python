@@ -61,31 +61,34 @@ asyncio.run(main())
 
 ## Model settings
 
-Both hosted models use the same native OpenAI Agents SDK `ModelSettings` contract:
+Both hosted models use the same supported subset of the native OpenAI Agents SDK
+`ModelSettings`. Deep reasoning and sampling are separate modes:
 
 ```python
 from agents import ModelSettings
 from openai.types.shared import Reasoning
 from iztro_agents import iztro_qimen_agent, iztro_ziwei_agent
 
-settings = ModelSettings(
+deep_settings = ModelSettings(
     reasoning=Reasoning(effort="high"),
     max_tokens=384000,
-    temperature=0.4,
-    top_p=0.9,
-    frequency_penalty=0.0,
-    presence_penalty=0.0,
     tool_choice="auto",
     parallel_tool_calls=True,
     metadata={"current_datetime": "2026-07-20T14:30:00+08:00"},
-    extra_body={"language": "vi", "enable_iztro_call": True},
+    extra_body={"language": "vi"},
 )
 
-ziwei = iztro_ziwei_agent(model_settings=settings)
-qimen = iztro_qimen_agent(model_settings=settings)
+fast_settings = ModelSettings(
+    reasoning=Reasoning(effort="none"),
+    temperature=0.4,  # Or top_p=0.9; do not set both.
+    extra_body={"language": "vi"},
+)
+
+ziwei = iztro_ziwei_agent(model_settings=deep_settings)
+qimen = iztro_qimen_agent(model_settings=fast_settings)
 ```
 
-Omit `reasoning`, or use `none`, `minimal`, or `low`, for the faster non-thinking path. `medium`, `high`, and `xhigh` use the deep-reasoning path. Omit `max_tokens` to keep the current 384,000-token default output capacity.
+Omit `reasoning`, or use `none`, `minimal`, or `low`, for the faster non-thinking path. `medium`, `high`, and `xhigh` use the same `high` deep-reasoning path. `temperature` and `top_p` work only on the non-thinking path and are mutually exclusive. DeepSeek does not support `frequency_penalty` or `presence_penalty`; the hosted API rejects them instead of silently ignoring them. Omit `max_tokens` to keep the current 384,000-token default output capacity.
 
 Supported response languages are `zh`, `en`, `ko`, `ja`, and `vi`; setting `extra_body.language` keeps all user-facing prose and translated terminology in that language without mixing. For live Qimen requests, create `metadata.current_datetime` from the user's local clock on each turn rather than keeping the fixed example value.
 
