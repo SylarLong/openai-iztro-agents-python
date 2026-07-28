@@ -90,6 +90,8 @@ qimen = iztro_qimen_agent(model_settings=fast_settings)
 
 Omit `reasoning`, or use `none`, `minimal`, or `low`, for the faster non-thinking path. `medium`, `high`, and `xhigh` use the same `high` deep-reasoning path. `temperature` and `top_p` work only on the non-thinking path and are mutually exclusive. DeepSeek does not support `frequency_penalty` or `presence_penalty`; the hosted API rejects them instead of silently ignoring them. Omit `max_tokens` to keep the current 384,000-token default output capacity.
 
+Non-thinking mode prioritizes speed and can miss or mis-associate details in a complex chart. Use `reasoning=Reasoning(effort="high")` for cross-palace Ziwei synthesis, multiple fortune layers, or Qimen decisions that combine chart and timing evidence. Deep reasoning is generally more reliable for these readings, but it does not guarantee correctness.
+
 Supported response languages are `zh`, `en`, `ko`, `ja`, and `vi`; setting `extra_body.language` keeps all user-facing prose and translated terminology in that language without mixing. For live Qimen requests, create `metadata.current_datetime` from the user's local clock on each turn rather than keeping the fixed example value.
 
 See the complete [Model settings support matrix](https://api-doc.iztro.com/sdk/model-settings), including raw HTTP names and upstream SDK fields that are not hosted-model controls.
