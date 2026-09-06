@@ -6,7 +6,18 @@ from typing import Any
 
 from agents import Agent
 
-from .model import IZTRO_QIMEN_MODEL, IZTRO_ZIWEI_MODEL, iztro_qimen_model, iztro_ziwei_model
+from .model import (
+    IZTRO_HYBRID_MODEL,
+    IZTRO_QIMEN_FAST_MODEL,
+    IZTRO_QIMEN_MODEL,
+    IZTRO_ZIWEI_FAST_MODEL,
+    IZTRO_ZIWEI_MODEL,
+    iztro_hybrid_model,
+    iztro_qimen_fast_model,
+    iztro_qimen_model,
+    iztro_ziwei_fast_model,
+    iztro_ziwei_model,
+)
 
 
 def iztro_ziwei_agent(
@@ -78,6 +89,72 @@ def iztro_qimen_agent(
         name=name,
         instructions=instructions,
         model=iztro_qimen_model(api_key=api_key, base_url=base_url, model=model_name),
+        tools=list(tools or []),
+        mcp_servers=list(mcp_servers or []),
+        **agent_kwargs,
+    )
+
+
+def iztro_ziwei_fast_agent(
+    *,
+    name: str = "Ziwei Fast",
+    instructions: str | None = None,
+    tools: list[Any] | None = None,
+    mcp_servers: list[Any] | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model_name: str = IZTRO_ZIWEI_FAST_MODEL,
+    **agent_kwargs: Any,
+) -> Agent:
+    """Return a stock Agent backed by the compact, fast Ziwei model."""
+    return Agent(
+        name=name,
+        instructions=instructions,
+        model=iztro_ziwei_fast_model(api_key=api_key, base_url=base_url, model=model_name),
+        tools=list(tools or []),
+        mcp_servers=list(mcp_servers or []),
+        **agent_kwargs,
+    )
+
+
+def iztro_qimen_fast_agent(
+    *,
+    name: str = "Qimen Fast",
+    instructions: str | None = None,
+    tools: list[Any] | None = None,
+    mcp_servers: list[Any] | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model_name: str = IZTRO_QIMEN_FAST_MODEL,
+    **agent_kwargs: Any,
+) -> Agent:
+    """Return a stock Agent backed by the focused, fast Qimen model."""
+    return Agent(
+        name=name,
+        instructions=instructions,
+        model=iztro_qimen_fast_model(api_key=api_key, base_url=base_url, model=model_name),
+        tools=list(tools or []),
+        mcp_servers=list(mcp_servers or []),
+        **agent_kwargs,
+    )
+
+
+def iztro_hybrid_agent(
+    *,
+    name: str = "Ziwei + Qimen",
+    instructions: str | None = None,
+    tools: list[Any] | None = None,
+    mcp_servers: list[Any] | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model_name: str = IZTRO_HYBRID_MODEL,
+    **agent_kwargs: Any,
+) -> Agent:
+    """Return a stock ``agents.Agent`` backed by the callable hybrid model."""
+    return Agent(
+        name=name,
+        instructions=instructions,
+        model=iztro_hybrid_model(api_key=api_key, base_url=base_url, model=model_name),
         tools=list(tools or []),
         mcp_servers=list(mcp_servers or []),
         **agent_kwargs,

@@ -13,16 +13,25 @@ from openai.types.shared import Reasoning
 
 from iztro_agents import (
     DEFAULT_BASE_URL,
+    IZTRO_HYBRID_MODEL,
+    IZTRO_QIMEN_FAST_MODEL,
     IZTRO_QIMEN_MODEL,
+    IZTRO_ZIWEI_FAST_MODEL,
     IZTRO_ZIWEI_MODEL,
     TOOL_EVENT_TYPE,
     ChatSession,
     IztroToolEvent,
     IztroToolsStreamEvent,
     IztroZiweiModel,
+    iztro_hybrid_agent,
+    iztro_hybrid_model,
     iztro_qimen_agent,
+    iztro_qimen_fast_agent,
+    iztro_qimen_fast_model,
     iztro_qimen_model,
     iztro_ziwei_agent,
+    iztro_ziwei_fast_agent,
+    iztro_ziwei_fast_model,
     iztro_ziwei_model,
 )
 from _mock import assistant_text, mock_chat
@@ -65,6 +74,9 @@ def test_model_default_constants():
     assert DEFAULT_BASE_URL == "https://chat-api.iztro.com"
     assert IZTRO_ZIWEI_MODEL == "iztro-ziwei-v3"
     assert IZTRO_QIMEN_MODEL == "iztro-qimen-v3"
+    assert IZTRO_HYBRID_MODEL == "iztro-hybrid-v3"
+    assert IZTRO_ZIWEI_FAST_MODEL == "iztro-ziwei-v3-fast"
+    assert IZTRO_QIMEN_FAST_MODEL == "iztro-qimen-v3-fast"
     assert TOOL_EVENT_TYPE == "tool_event"
     model = iztro_ziwei_model(api_key="k")
     assert model.model == IZTRO_ZIWEI_MODEL
@@ -84,6 +96,21 @@ def test_qimen_model_factory_uses_qimen_model():
     assert _base_url(model) == f"{DEFAULT_BASE_URL}/v2/"
 
 
+def test_hybrid_model_factory_uses_hybrid_model():
+    model = iztro_hybrid_model(api_key="k")
+    assert isinstance(model, OpenAIChatCompletionsModel)
+    assert model.model == IZTRO_HYBRID_MODEL
+    assert _base_url(model) == f"{DEFAULT_BASE_URL}/v2/"
+
+
+def test_fast_model_factories_use_fast_models():
+    ziwei = iztro_ziwei_fast_model(api_key="k")
+    qimen = iztro_qimen_fast_model(api_key="k")
+
+    assert ziwei.model == IZTRO_ZIWEI_FAST_MODEL
+    assert qimen.model == IZTRO_QIMEN_FAST_MODEL
+
+
 def test_model_custom_model_name():
     model = iztro_ziwei_model(api_key="k", model="iztro-ziwei-v9")
     assert model.model == "iztro-ziwei-v9"
@@ -99,6 +126,15 @@ def test_model_custom_model_name():
         (IZTRO_QIMEN_MODEL, "none"),
         (IZTRO_QIMEN_MODEL, "low"),
         (IZTRO_QIMEN_MODEL, "high"),
+        (IZTRO_HYBRID_MODEL, "none"),
+        (IZTRO_HYBRID_MODEL, "low"),
+        (IZTRO_HYBRID_MODEL, "high"),
+        (IZTRO_ZIWEI_FAST_MODEL, "none"),
+        (IZTRO_ZIWEI_FAST_MODEL, "low"),
+        (IZTRO_ZIWEI_FAST_MODEL, "high"),
+        (IZTRO_QIMEN_FAST_MODEL, "none"),
+        (IZTRO_QIMEN_FAST_MODEL, "low"),
+        (IZTRO_QIMEN_FAST_MODEL, "high"),
     ),
 )
 async def test_native_reasoning_effort_reaches_wire(model_name, effort):
@@ -185,6 +221,28 @@ def test_qimen_agent_factory_uses_qimen_model():
     assert agent.name == "Qimen"
     assert isinstance(agent.model, OpenAIChatCompletionsModel)
     assert agent.model.model == IZTRO_QIMEN_MODEL
+    assert agent.tools == []
+    assert agent.mcp_servers == []
+
+
+def test_fast_agent_factories_use_fast_models():
+    ziwei = iztro_ziwei_fast_agent(api_key="k")
+    qimen = iztro_qimen_fast_agent(api_key="k")
+
+    assert ziwei.name == "Ziwei Fast"
+    assert qimen.name == "Qimen Fast"
+    assert ziwei.model.model == IZTRO_ZIWEI_FAST_MODEL
+    assert qimen.model.model == IZTRO_QIMEN_FAST_MODEL
+    assert ziwei.tools == []
+    assert qimen.tools == []
+
+
+def test_hybrid_agent_factory_uses_hybrid_model():
+    agent = iztro_hybrid_agent(api_key="k")
+    assert isinstance(agent, Agent)
+    assert agent.name == "Ziwei + Qimen"
+    assert isinstance(agent.model, OpenAIChatCompletionsModel)
+    assert agent.model.model == IZTRO_HYBRID_MODEL
     assert agent.tools == []
     assert agent.mcp_servers == []
 

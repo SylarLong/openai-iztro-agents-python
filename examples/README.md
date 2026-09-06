@@ -59,6 +59,7 @@ That's it. The reading prints to your screen.
 | `10_chinese_chat.py` | Do everything in Chinese (中文全程对话). | unicode end-to-end |
 | `11_agent_as_tool.py` | Use the Ziwei agent as **one tool** inside your own GPT agent. | agents-as-tools |
 | `12_qimen_decision.py` | Analyze one concrete decision and, when needed, calculate action windows with Qimen. | `iztro_qimen_agent` + question time |
+| `13_fast_ziwei_session_best_practice.py` | Illustrative customer-style multi-turn integration with a profile configured once. | `iztro_ziwei_fast_agent` + `ChatSession` |
 | `fullstack-demo/` | A React + FastAPI chat app with session list, rename, delete, fork, message editing, chart-tool history, and streaming. | production integration shape |
 
 ## A few words you'll see

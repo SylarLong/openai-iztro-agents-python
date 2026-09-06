@@ -21,17 +21,29 @@ lives on the server via ``ChatSession`` (the OpenAI Conversations-style session)
 # Re-export the SDK essentials so callers can `from iztro_agents import ...`.
 from agents import Agent, Runner, function_tool
 
-from .agent import iztro_qimen_agent, iztro_ziwei_agent
+from .agent import (
+    iztro_hybrid_agent,
+    iztro_qimen_agent,
+    iztro_qimen_fast_agent,
+    iztro_ziwei_agent,
+    iztro_ziwei_fast_agent,
+)
 from .model import (
     DEFAULT_BASE_URL,
+    IZTRO_HYBRID_MODEL,
+    IZTRO_QIMEN_FAST_MODEL,
     IZTRO_QIMEN_MODEL,
+    IZTRO_ZIWEI_FAST_MODEL,
     IZTRO_ZIWEI_MODEL,
     IztroModelResponse,
     IztroToolEvent,
     IztroToolsStreamEvent,
     IztroZiweiModel,
     TOOL_EVENT_TYPE,
+    iztro_hybrid_model,
+    iztro_qimen_fast_model,
     iztro_qimen_model,
+    iztro_ziwei_fast_model,
     iztro_ziwei_model,
 )
 from .session import ChatSession, list_user_conversations
@@ -41,6 +53,12 @@ __all__ = [
     "iztro_ziwei_model",
     "iztro_qimen_agent",
     "iztro_qimen_model",
+    "iztro_qimen_fast_agent",
+    "iztro_qimen_fast_model",
+    "iztro_ziwei_fast_agent",
+    "iztro_ziwei_fast_model",
+    "iztro_hybrid_agent",
+    "iztro_hybrid_model",
     "IztroZiweiModel",
     "IztroModelResponse",
     "IztroToolEvent",
@@ -54,6 +72,9 @@ __all__ = [
     "DEFAULT_BASE_URL",
     "IZTRO_ZIWEI_MODEL",
     "IZTRO_QIMEN_MODEL",
+    "IZTRO_HYBRID_MODEL",
+    "IZTRO_ZIWEI_FAST_MODEL",
+    "IZTRO_QIMEN_FAST_MODEL",
     "TOOL_EVENT_TYPE",
 ]
 

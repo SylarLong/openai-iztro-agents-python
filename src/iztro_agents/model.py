@@ -25,6 +25,9 @@ from openai import AsyncOpenAI
 DEFAULT_BASE_URL = "https://chat-api.iztro.com"
 IZTRO_ZIWEI_MODEL = "iztro-ziwei-v3"
 IZTRO_QIMEN_MODEL = "iztro-qimen-v3"
+IZTRO_HYBRID_MODEL = "iztro-hybrid-v3"
+IZTRO_ZIWEI_FAST_MODEL = "iztro-ziwei-v3-fast"
+IZTRO_QIMEN_FAST_MODEL = "iztro-qimen-v3-fast"
 TOOL_EVENT_TYPE = "tool_event"
 
 
@@ -215,4 +218,40 @@ def iztro_qimen_model(
     ``result.raw_responses[i].tool_event`` / ``.iztro_tools`` or as
     :class:`IztroToolEvent`.
     """
+    return iztro_ziwei_model(api_key=api_key, base_url=base_url, model=model)
+
+
+def iztro_ziwei_fast_model(
+    *,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model: str = IZTRO_ZIWEI_FAST_MODEL,
+) -> IztroZiweiModel:
+    """Build the latency-optimized hosted Ziwei model.
+
+    This model exposes only the hosted ``get_ziwei`` tool.
+    """
+    return iztro_ziwei_model(api_key=api_key, base_url=base_url, model=model)
+
+
+def iztro_qimen_fast_model(
+    *,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model: str = IZTRO_QIMEN_FAST_MODEL,
+) -> IztroZiweiModel:
+    """Build the latency-optimized hosted Qimen model.
+
+    This model exposes only the hosted ``qigua`` and ``yingqi`` tools.
+    """
+    return iztro_ziwei_model(api_key=api_key, base_url=base_url, model=model)
+
+
+def iztro_hybrid_model(
+    *,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    model: str = IZTRO_HYBRID_MODEL,
+) -> IztroZiweiModel:
+    """Build the callable hosted Ziwei + Qimen hybrid model."""
     return iztro_ziwei_model(api_key=api_key, base_url=base_url, model=model)

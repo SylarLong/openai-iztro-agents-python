@@ -61,13 +61,18 @@ asyncio.run(main())
 
 ## Model settings
 
-Both hosted models use the same supported subset of the native OpenAI Agents SDK
+All four public hosted models use the same supported subset of the native OpenAI Agents SDK
 `ModelSettings`. Deep reasoning and sampling are separate modes:
 
 ```python
 from agents import ModelSettings
 from openai.types.shared import Reasoning
-from iztro_agents import iztro_qimen_agent, iztro_ziwei_agent
+from iztro_agents import (
+    iztro_qimen_agent,
+    iztro_qimen_fast_agent,
+    iztro_ziwei_agent,
+    iztro_ziwei_fast_agent,
+)
 
 deep_settings = ModelSettings(
     reasoning=Reasoning(effort="high"),
@@ -86,6 +91,8 @@ fast_settings = ModelSettings(
 
 ziwei = iztro_ziwei_agent(model_settings=deep_settings)
 qimen = iztro_qimen_agent(model_settings=fast_settings)
+ziwei_fast = iztro_ziwei_fast_agent(model_settings=fast_settings)
+qimen_fast = iztro_qimen_fast_agent(model_settings=fast_settings)
 ```
 
 Omit `reasoning`, or use `none`, `minimal`, or `low`, for the faster non-thinking path. `medium`, `high`, and `xhigh` use the same `high` deep-reasoning path. `temperature` and `top_p` work only on the non-thinking path and are mutually exclusive. DeepSeek does not support `frequency_penalty` or `presence_penalty`; the hosted API rejects them instead of silently ignoring them. Omit `max_tokens` to keep the current 384,000-token default output capacity.
@@ -110,6 +117,12 @@ It casts the chart from the question time, so it does **not** need a birth date,
 | --- | --- | --- |
 | `iztro-qimen-v3` | One current event, decision, outcome, and optional timing | The concrete situation and question time |
 | `iztro-ziwei-v3` | Natal profile, compatibility, and longer-term fortune cycles | Birth date, birth time, and gender |
+| `iztro-ziwei-v3-fast` | Lower-latency Ziwei analysis; exposes only the hosted `get_ziwei` tool | Birth date, birth time, and gender |
+| `iztro-qimen-v3-fast` | Lower-latency Qimen analysis; exposes only the hosted `qigua` and `yingqi` tools | The concrete situation and question time |
+
+The two `-fast` variants keep the hosted tool surface focused:
+`iztro_ziwei_fast_agent(...)` exposes only `get_ziwei`, while
+`iztro_qimen_fast_agent(...)` exposes only `qigua` and `yingqi`.
 
 ### Qimen request rules
 
@@ -153,7 +166,7 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
-For a strong request, describe the current situation, ask one decision, and say whether you need timing. Put unrelated matters in separate runs so each receives its own chart. See the complete [`12_qimen_decision.py`](./examples/12_qimen_decision.py) example and compare both public models in the [Models guide](https://api-doc.iztro.com/sdk/models).
+For a strong request, describe the current situation, ask one decision, and say whether you need timing. Put unrelated matters in separate runs so each receives its own chart. See the complete [`12_qimen_decision.py`](./examples/12_qimen_decision.py) example and compare all four public models in the [Models guide](https://api-doc.iztro.com/sdk/models).
 
 Public Iztro calculation names are available through Iztro tool events. Your own function tools, MCP servers, and human-in-the-loop continue to use the normal OpenAI Agents SDK interfaces.
 
