@@ -227,9 +227,10 @@ def iztro_ziwei_fast_model(
     base_url: str | None = None,
     model: str = IZTRO_ZIWEI_FAST_MODEL,
 ) -> IztroZiweiModel:
-    """Build the latency-optimized hosted Ziwei model.
+    """Build the focused, latency-optimized hosted Ziwei model.
 
-    This model exposes only the hosted ``get_ziwei`` tool.
+    Its public response and Iztro activity-event contract matches
+    :func:`iztro_ziwei_model`.
     """
     return iztro_ziwei_model(api_key=api_key, base_url=base_url, model=model)
 
@@ -240,9 +241,10 @@ def iztro_qimen_fast_model(
     base_url: str | None = None,
     model: str = IZTRO_QIMEN_FAST_MODEL,
 ) -> IztroZiweiModel:
-    """Build the latency-optimized hosted Qimen model.
+    """Build the focused, latency-optimized hosted Qimen model.
 
-    This model exposes only the hosted ``qigua`` and ``yingqi`` tools.
+    Its public response and Iztro activity-event contract matches
+    :func:`iztro_qimen_model`.
     """
     return iztro_ziwei_model(api_key=api_key, base_url=base_url, model=model)
 
