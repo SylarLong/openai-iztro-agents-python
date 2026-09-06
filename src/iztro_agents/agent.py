@@ -106,7 +106,7 @@ def iztro_ziwei_fast_agent(
     model_name: str = IZTRO_ZIWEI_FAST_MODEL,
     **agent_kwargs: Any,
 ) -> Agent:
-    """Return a stock Agent backed by the compact, fast Ziwei model."""
+    """Return a stock Agent backed by the faster, lower-token, lower-cost Ziwei model."""
     return Agent(
         name=name,
         instructions=instructions,
@@ -128,7 +128,7 @@ def iztro_qimen_fast_agent(
     model_name: str = IZTRO_QIMEN_FAST_MODEL,
     **agent_kwargs: Any,
 ) -> Agent:
-    """Return a stock Agent backed by the focused, fast Qimen model."""
+    """Return a stock Agent backed by the faster, lower-token, lower-cost Qimen model."""
     return Agent(
         name=name,
         instructions=instructions,

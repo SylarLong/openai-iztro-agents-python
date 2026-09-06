@@ -117,12 +117,12 @@ It casts the chart from the question time, so it does **not** need a birth date,
 | --- | --- | --- |
 | `iztro-qimen-v3` | One current event, decision, outcome, and optional timing | The concrete situation and question time |
 | `iztro-ziwei-v3` | Natal profile, compatibility, and longer-term fortune cycles | Birth date, birth time, and gender |
-| `iztro-ziwei-v3-fast` | Focused, lower-latency Ziwei analysis; response-compatible with `iztro-ziwei-v3` | Birth date, birth time, and gender |
-| `iztro-qimen-v3-fast` | Focused, lower-latency Qimen analysis; response-compatible with `iztro-qimen-v3` | The concrete situation and question time |
+| `iztro-ziwei-v3-fast` | Faster Ziwei analysis with lower token usage and lower per-request cost; response-compatible with `iztro-ziwei-v3` | Birth date, birth time, and gender |
+| `iztro-qimen-v3-fast` | Faster Qimen analysis with lower token usage and lower per-request cost; response-compatible with `iztro-qimen-v3` | The concrete situation and question time |
 
-The two `-fast` variants are drop-in choices for focused, latency-sensitive
-requests. They preserve the response shape and user-visible Iztro activity
-events of the corresponding v3 model.
+The two `-fast` variants use fewer tokens for faster, lower-cost requests. They
+preserve the response shape and user-visible information of the corresponding
+v3 model.
 
 ### Qimen request rules
 

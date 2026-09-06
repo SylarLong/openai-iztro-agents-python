@@ -1,7 +1,7 @@
 """Example 13 — Fast Ziwei managed session (illustrative best-practice shape).
 
 This mirrors a common customer integration: configure the person's profile once in the
-agent instructions, choose the latency-optimized Ziwei model, and reuse one ChatSession
+agent instructions, choose the faster, lower-token Ziwei model, and reuse one ChatSession
 for follow-up turns instead of repeating birth details.
 
 This is an example, not a complete production backend. Keep the API key server-side,
