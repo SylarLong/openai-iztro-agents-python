@@ -59,7 +59,7 @@ That's it. The reading prints to your screen.
 | `10_chinese_chat.py` | Do everything in Chinese (中文全程对话). | unicode end-to-end |
 | `11_agent_as_tool.py` | Use the Ziwei agent as **one tool** inside your own GPT agent. | agents-as-tools |
 | `12_qimen_decision.py` | Analyze one concrete decision and, when needed, calculate action windows with Qimen. | `iztro_qimen_agent` + question time |
-| `13_fast_ziwei_session_best_practice.py` | Illustrative customer-style multi-turn integration with a profile configured once. | `iztro_ziwei_fast_agent` + `ChatSession` |
+| `13_fast_ziwei_session.py` | Illustrative customer-style multi-turn integration with a profile configured once. | `iztro_ziwei_fast_agent` + `ChatSession` |
 | `fullstack-demo/` | A React + FastAPI chat app with session list, rename, delete, fork, message editing, chart-tool history, and streaming. | production integration shape |
 
 ## A few words you'll see
@@ -96,3 +96,15 @@ That's it. The reading prints to your screen.
   scripts add `import sys; sys.stdout.reconfigure(encoding="utf-8")` near the top.
 
 Each example is self-contained — copy one, change the question, and you have your own app.
+
+## Providing birth information: which example should I copy?
+
+Choose **one** file. Each example runs independently, with no mode to select.
+
+1. **You already know the birth information:** copy [14: instructions](14_birth_profile_instructions.py). Edit the three birth values in `instructions`. This is the simplest starting point.
+2. **Your app saves birth information in customer accounts:** copy [15: UserContext](15_birth_profile_user_context.py). Your developer connects the saved account data. The instructions function explicitly gives those fields to the model.
+3. **Let customers tell the assistant their birth information:** copy [16: conversation](16_birth_profile_conversation.py). Birth details appear in the customer message; follow-up messages use the same session.
+
+Start with the comment at the top of your chosen file: it explains when to use it, what to change, and how to run it. Set `ZIWEI_API_KEY` before running. Dates are Gregorian and birth times are local clock times including AM/PM, not time-branch indexes. If your calculation convention requires birthplace/timezone, collect and supply those too.
+
+`UserContext` is a type defined in example 15, not a package import. Passing context alone does not make it visible to the model; the instructions function is required here. Keep API keys out of prompts and use a separate session per customer.

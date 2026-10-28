@@ -284,3 +284,7 @@ in-memory conversation store).
 - The backend currently streams an answer as a single chunk (not token-by-token); `Runner.run_streamed` works but token-level streaming is a future backend enhancement.
 - Streaming together with developer tools is not yet supported — use non-streaming `Runner.run` for tool loops.
 - Multi-turn tool loops re-send the prompt each round, so they cost more tokens.
+
+### Providing birth information
+
+See [which example to copy](examples/README.md#providing-birth-information-which-example-should-i-copy): three independent examples for instructions, saved account data (UserContext), or customer chat messages.
